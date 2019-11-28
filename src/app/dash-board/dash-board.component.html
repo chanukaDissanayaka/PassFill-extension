@@ -1,0 +1,24 @@
+<p>dash-board works!</p>
+<webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+  *ngIf="showWebcam" [allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable"
+  [videoOptions]="videoOptions" [imageQuality]="1" (cameraSwitched)="cameraWasSwitched($event)"
+  (initError)="handleInitError($event)"></webcam>
+<div class="col-sm-6">
+  <div class="container">
+    <h3>Choose File</h3>
+    <form>
+      <div class="form-group">
+        <input #imageInput type="file" (change)="fileProgress1($event)" name="image" />
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary" (click)="onSubmitImage1()">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <button class="btn btn-primary" (click)="gotoLogin()">Go to Login</button>
+  <div class="container" *ngIf="showImage1">
+    <div>
+      <img [src]="image1" width="50%" height="50%">
+    </div>
+  </div>
