@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { currentView } from '../model/CurrentView.model';
 import { AppState } from '../app.state';
 import { Store, select } from '@ngrx/store';
@@ -21,6 +21,9 @@ export class LoginComponent implements OnInit {
   private loggedInUser: User = null;
   private currentView$: Observable<currentView>;
   private loggedInUser$: Observable<User>;
+  private showProgress = new Subject<boolean>();
+  private loggedInSessionUser$ = new Subject<User>();
+  private loggedInSessionUser = this.loggedInSessionUser$.asObservable();
 
   private loginForm = new FormGroup({
     email: new FormControl(''),
@@ -38,6 +41,16 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.store.select('CurrentView').subscribe(data => console.log(data));
     this.store.select('User').subscribe(data => console.log(data));
+    this.showProgressbar();
+    this.subscribeToEvents();
+    this.loginFromSession();
+  }
+
+  subscribeToEvents() {
+    this.loggedInSessionUser.subscribe(user => {
+      alert('user got');
+      this.hideProgressbar();
+    });
   }
 
   submit() {
@@ -45,6 +58,49 @@ export class LoginComponent implements OnInit {
     this.login(this.loginForm.value.email, this.loginForm.value.password);
   }
 
+  checkBg() {
+
+    chrome.runtime.sendMessage({ name: 'test', message: 'hello' }, res => {
+      const loggedInUser: User = { id: 1, name: 'abc' };
+      chrome.storage.local.set({ user: loggedInUser }, () => {
+        chrome.storage.local.get('user', (data) => {
+          console.log(data.user);
+          console.log(data.user.id);
+          if (data.user.id && data.user.id !== 0) {
+            alert('data');
+          }
+        });
+      });
+      console.log(res);
+      alert(res);
+    });
+  }
+
+  loginFromSession() {
+    chrome.storage.local.get('user', (data) => {
+      if (data.user) {
+        if (data.user.id && data.user.id !== 0) {
+          this.loggedInSessionUser$.next(data.user);
+        }
+      }
+    });
+  }
+
+  showProgressbar() {
+    this.showProgress.next(true);
+  }
+
+  hideProgressbar() {
+    this.showProgress.next(false);
+  }
+
+  clearStorageTest() {
+    chrome.storage.local.clear();
+  }
+
+  authorizeSessionUser() {
+
+  }
 
   goToSignup() {
     this.router.navigateByUrl('signup');
@@ -59,7 +115,7 @@ export class LoginComponent implements OnInit {
 
     this.mainDataService.Login(loginReq).subscribe(response => {
       console.log(response);
-      this.navigate(response);
+      this.onLoginResponse(response);
     },
       error => {
         console.log(error);
@@ -70,13 +126,11 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  navigate(response: LoginResponse) {
-
-    if (response.loginStatus === true) {
-
-      const user = this.getUser();
-      this.loggedInUser = user;
-      this.store.dispatch(new loginDetailsAction.SetUser(user));
+  onLoginResponse(response: LoginResponse) {
+    if (response.loginStatus) {
+      this.loggedInUser = response.LoggedInUser;
+      this.store.dispatch(new loginDetailsAction.SetUser(response.LoggedInUser));
+      this.setSessionUser(response.LoggedInUser);
       this.router.navigateByUrl('dashBoard');
     } else {
       this.loginForm = new FormGroup({
@@ -84,8 +138,12 @@ export class LoginComponent implements OnInit {
         password: new FormControl(''),
       });
     }
-
   }
+
+  setSessionUser(loggedInUser: User) {
+    chrome.storage.local.set({ user: loggedInUser }, () => { });
+  }
+
 
   getUser() {
     const user: User = {

@@ -1,4 +1,4 @@
-<diV>
+<div *ngIf="(!showProgress | async)">
 
   <!-- Default form login -->
   <form [formGroup]="loginForm" class="text-center border border-light p-5">
@@ -16,10 +16,20 @@
 
     <!-- Sign in button -->
     <button mdbBtn color="info" block="true" class="my-4" type="button" (click)="submit()">Sign in</button>
+    <button mdbBtn color="info" block="true" class="my-4" type="button" (click)="checkBg()">Check background</button>
+    <button mdbBtn color="info" block="true" class="my-4" type="button"
+      (click)="clearStorageTest()">ClearStorage</button>
 
     <!-- Register -->
     <p>Not a member?
       <button type="button" class="btn btn-outline-primary btn-sm" (click)="goToSignup()">Register</button>
     </p>
   </form>
-</diV>
+</div>
+
+<mat-card *ngIf="(showProgress | async)">
+  <mat-card-content>
+    <mat-progress-spinner mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card-content>
+</mat-card>

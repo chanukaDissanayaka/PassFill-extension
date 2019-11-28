@@ -19,11 +19,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.select('User').subscribe(user => {
-      if (user.id === 0) {
-        this.router.navigateByUrl('dashBoard');
-      }
-    });
+    // this.store.select('User').subscribe(user => {
+    //   if (user.id === 0) {
+    //     this.router.navigateByUrl('dashBoard');
+    //   }
+    // });
   }
 
   login() {

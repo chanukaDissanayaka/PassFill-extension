@@ -18,6 +18,8 @@ import { MainDataService } from './services/mainDataService.service';
 import { HttpClientModule } from '@angular/common/http';
 import { loginDetailsReducer } from './store/loginDetails.reducers';
 
+import { MatProgressSpinnerModule, MatCardModule } from '@angular/material';
+
 const appRoutes: Routes = [
   { path: 'dashBoard', component: DashBoardComponent },
   { path: 'login', component: LoginComponent },
@@ -39,6 +41,8 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
     StoreModule.forRoot({ CurrentView: currentViewReducer, User: loginDetailsReducer }, {
       runtimeChecks: {
         strictStateImmutability: true,
