@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { currentView } from '../model/CurrentView.model';
 import { AppState } from '../app.state';
@@ -21,9 +21,7 @@ export class LoginComponent implements OnInit {
   private loggedInUser: User = null;
   private currentView$: Observable<currentView>;
   private loggedInUser$: Observable<User>;
-  private showProgress = new Subject<boolean>();
-  private loggedInSessionUser$ = new Subject<User>();
-  private loggedInSessionUser = this.loggedInSessionUser$.asObservable();
+  private showProgress: boolean;
 
   private loginForm = new FormGroup({
     email: new FormControl(''),
@@ -33,7 +31,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private router: Router,
-    private mainDataService: MainDataService
+    private mainDataService: MainDataService,
+    private zone: NgZone,
   ) {
     this.loggedInUser$ = store.select('User');
   }
@@ -41,17 +40,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.store.select('CurrentView').subscribe(data => console.log(data));
     this.store.select('User').subscribe(data => console.log(data));
-    this.showProgressbar();
-    this.subscribeToEvents();
-    this.loginFromSession();
   }
 
-  subscribeToEvents() {
-    this.loggedInSessionUser.subscribe(user => {
-      alert('user got');
-      this.hideProgressbar();
-    });
-  }
 
   submit() {
 
@@ -59,9 +49,8 @@ export class LoginComponent implements OnInit {
   }
 
   checkBg() {
-
     chrome.runtime.sendMessage({ name: 'test', message: 'hello' }, res => {
-      const loggedInUser: User = { id: 1, name: 'abc' };
+      const loggedInUser: User = { id: 1, username: 'abc' };
       chrome.storage.local.set({ user: loggedInUser }, () => {
         chrome.storage.local.get('user', (data) => {
           console.log(data.user);
@@ -76,31 +65,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  loginFromSession() {
-    chrome.storage.local.get('user', (data) => {
-      if (data.user) {
-        if (data.user.id && data.user.id !== 0) {
-          this.loggedInSessionUser$.next(data.user);
-        }
-      }
-    });
-  }
-
-  showProgressbar() {
-    this.showProgress.next(true);
-  }
-
-  hideProgressbar() {
-    this.showProgress.next(false);
-  }
-
   clearStorageTest() {
     chrome.storage.local.clear();
   }
 
-  authorizeSessionUser() {
-
-  }
 
   goToSignup() {
     this.router.navigateByUrl('signup');
@@ -128,9 +96,9 @@ export class LoginComponent implements OnInit {
 
   onLoginResponse(response: LoginResponse) {
     if (response.loginStatus) {
-      this.loggedInUser = response.LoggedInUser;
-      this.store.dispatch(new loginDetailsAction.SetUser(response.LoggedInUser));
-      this.setSessionUser(response.LoggedInUser);
+      this.loggedInUser = response.loggedInUser;
+      this.store.dispatch(new loginDetailsAction.SetUser(response.loggedInUser));
+      this.setSessionUser(response.loggedInUser);
       this.router.navigateByUrl('dashBoard');
     } else {
       this.loginForm = new FormGroup({
@@ -148,7 +116,7 @@ export class LoginComponent implements OnInit {
   getUser() {
     const user: User = {
       id: 1,
-      name: 'user',
+      username: 'user',
     };
     return user;
   }

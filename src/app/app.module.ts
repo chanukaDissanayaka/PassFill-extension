@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { currentViewReducer } from './store/currentView.reducers';
+import { Ng2LoadingSpinnerModule } from 'ng2-loading-spinner'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    Ng2LoadingSpinnerModule.forRoot({}),
     StoreModule.forRoot({ CurrentView: currentViewReducer, User: loginDetailsReducer }, {
       runtimeChecks: {
         strictStateImmutability: true,

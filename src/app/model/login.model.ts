@@ -7,6 +7,6 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     loginStatus: boolean;
-    LoggedInUser: User;
+    loggedInUser: User;
 }
 

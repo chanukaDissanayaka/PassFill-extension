@@ -1,46 +1,96 @@
-<!-- Default form register -->
-<div>
-  <form class="text-center border border-light p-5">
+<div class="card" [ng2-loading]="showSpinner">
+  <!-- Default form register -->
+  <div>
+    <form [formGroup]="signupFromGroup" class="text-center border border-light p-5">
 
-    <p class="h4 mb-4">Sign up</p>
+      <p class="h4 mb-4">Sign up</p>
 
-    <div class="form-row mb-4">
-      <div class="col">
-        <!-- First name -->
-        <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="First name">
+      <div class="form-row mb-4">
+        <div class="col">
+          <!-- First name -->
+          <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="First name"
+            formControlName="firstName">
+
+          <div
+            *ngIf="signupFromGroup.controls['firstName'].invalid && (signupFromGroup.controls['firstName'].dirty || signupFromGroup.controls['firstName'].touched)"
+            class="alert alert-danger">
+            <div *ngIf="signupFromGroup.controls['firstName'].errors.required">
+              Name is required.
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <!-- Last name -->
+          <input type="text" id="defaultRegisterFormLastName" class="form-control" placeholder="Last name"
+            formControlName="lastName">
+
+          <div
+            *ngIf="signupFromGroup.controls['lastName'].invalid && (signupFromGroup.controls['lastName'].dirty || signupFromGroup.controls['lastName'].touched)"
+            class="alert alert-danger">
+            <div *ngIf="signupFromGroup.controls['lastName'].errors.required">
+              Name is required.
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col">
-        <!-- Last name -->
-        <input type="text" id="defaultRegisterFormLastName" class="form-control" placeholder="Last name">
+
+      <!-- E-mail -->
+      <input type="email" id="defaultRegisterFormEmail" class="form-control mb-4" placeholder="E-mail"
+        formControlName="email">
+
+      <div
+        *ngIf="signupFromGroup.controls['email'].invalid && (signupFromGroup.controls['email'].dirty || signupFromGroup.controls['email'].touched)"
+        class="alert alert-danger">
+        <div *ngIf="signupFromGroup.controls['email'].errors.required">
+          Email is required.
+        </div>
       </div>
-    </div>
 
-    <!-- E-mail -->
-    <input type="email" id="defaultRegisterFormEmail" class="form-control mb-4" placeholder="E-mail">
+      <!-- Password -->
+      <input type="password" id="defaultRegisterFormPassword" class="form-control" placeholder="Password"
+        aria-describedby="defaultRegisterFormPasswordHelpBlock" formControlName="password">
+      <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+        At least 8 characters and 1 digit
+      </small>
 
-    <!-- Password -->
-    <input type="password" id="defaultRegisterFormPassword" class="form-control" placeholder="Password"
-      aria-describedby="defaultRegisterFormPasswordHelpBlock">
-    <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
-      At least 8 characters and 1 digit
-    </small>
+      <div
+        *ngIf="signupFromGroup.controls['password'].invalid && (signupFromGroup.controls['password'].dirty || signupFromGroup.controls['password'].touched)"
+        class="alert alert-danger">
+        <div *ngIf="signupFromGroup.controls['password'].errors.required">
+          Password is required.
+        </div>
+      </div>
 
-    <!-- Phone number -->
+      <input type="password" id="defaultRegisterFormConfirm" class="form-control" placeholder="Confirm Password"
+        aria-describedby="defaultRegisterFormPasswordHelpBlock" formControlName="confirm">
+
+      <div
+        *ngIf="signupFromGroup.controls['confirm'].invalid && (signupFromGroup.controls['confirm'].dirty || signupFromGroup.controls['confirm'].touched)"
+        class="alert alert-danger">
+        <div *ngIf="signupFromGroup.controls['confirm'].errors.required">
+          Confirmation is required.
+        </div>
+      </div>
+
+      <!-- Phone number
     <input type="text" id="defaultRegisterPhonePassword" class="form-control" placeholder="Phone number"
       aria-describedby="defaultRegisterFormPhoneHelpBlock">
     <small id="defaultRegisterFormPhoneHelpBlock" class="form-text text-muted mb-4">
       Optional - for two-step authentication
-    </small>
+    </small> -->
 
-    <!-- Sign up button -->
-    <button mdbBtn color="info" block="true" class="my-4" type="submit">Sign up</button>
+      <small *ngIf="formError" class="form-text text-muted alert-danger mb-4">
+        {{ errorMessage}}
+      </small>
+      <!-- Sign up button -->
+      <button mdbBtn color="info" block="true" class="my-4" type="button" (click)="onSignup()">Sign up</button>
 
-    <p>Already a member?
-      <button type="button" class="btn btn-outline-primary btn-sm" (click)="goToLogin()">SignIn</button>
-    </p>
+      <p>Already a member?
+        <button type="button" class="btn btn-outline-primary btn-sm" (click)="goToLogin()">SignIn</button>
+      </p>
 
-  </form>
+    </form>
+  </div>
 </div>
-
 
 <!-- Default form register -->

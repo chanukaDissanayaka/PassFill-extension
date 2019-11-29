@@ -1,4 +1,4 @@
-<div *ngIf="(!showProgress | async)">
+<div>
 
   <!-- Default form login -->
   <form [formGroup]="loginForm" class="text-center border border-light p-5">
@@ -26,10 +26,10 @@
     </p>
   </form>
 </div>
-
-<mat-card *ngIf="(showProgress | async)">
+<!-- 
+<mat-card>
   <mat-card-content>
     <mat-progress-spinner mode="indeterminate">
     </mat-progress-spinner>
   </mat-card-content>
-</mat-card>
+</mat-card> -->

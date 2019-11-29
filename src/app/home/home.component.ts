@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { currentView } from '../model/CurrentView.model';
 import { AppState } from '../app.state';
 import { Store } from '@ngrx/store';
 import * as currentViewAction from '../store/currentView.action';
+import * as loginDetailsAction from '../store/loginDetails.action';
 import { Router } from '@angular/router';
 import { User } from '../model/User.model';
 
@@ -14,45 +15,55 @@ import { User } from '../model/User.model';
 })
 export class HomeComponent implements OnInit {
 
+  private loggedInSessionUser$ = new Subject<User>();
+  private loggedInSessionUser = this.loggedInSessionUser$.asObservable();
   private loggedinUser: Observable<User>;
-  constructor(private store: Store<AppState>, private router: Router) {
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private zone: NgZone) {
   }
 
   ngOnInit() {
-    // this.store.select('User').subscribe(user => {
-    //   if (user.id === 0) {
-    //     this.router.navigateByUrl('dashBoard');
-    //   }
-    // });
+    this.subscribeToEvents();
+    this.loginFromSession();
+  }
+  subscribeToEvents() {
+    this.loggedInSessionUser.subscribe(user => {
+      this.authorizeSessionUser(user);
+    });
   }
 
   login() {
-
     this.router.navigateByUrl('login');
-
-    // this.homeView = false;
-    // this.signupView = false;
-    // this.loginView = true;
-    // const updatedView: currentView = {
-    //   homeView: this.homeView,
-    //   loginView: this.loginView,
-    //   signupView: this.signupView,
-    // };
-    // this.store.dispatch(new currentViewAction.AddView(updatedView));
   }
 
   signup() {
     this.router.navigateByUrl('signup');
-
-    // this.homeView = false;
-    // this.signupView = true;
-    // this.loginView = false;
-    // const updatedView: currentView = {
-    //   homeView: this.homeView,
-    //   loginView: this.loginView,
-    //   signupView: this.signupView,
-    // };
-    // this.store.dispatch(new currentViewAction.AddView(updatedView));
   }
+
+  loginFromSession() {
+    chrome.storage.local.get('user', (data) => {
+      if (data.user) {
+        if (data.user.id && data.user.id !== 0) {
+          this.loggedInSessionUser$.next(data.user);
+        }
+      }
+    });
+  }
+
+  authorizeSessionUser(user) {
+    this.zone.run(() => {
+      const authorized = true;
+      if (authorized) {
+        this.store.dispatch(new loginDetailsAction.SetUser(user));
+        this.router.navigateByUrl('dashBoard');
+      } else {
+
+      }
+    });
+
+  }
+
 
 }

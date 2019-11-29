@@ -3,7 +3,7 @@ import * as loginDetailsAction from './loginDetails.action';
 
 const initUser: User = {
     id: 0,
-    name: null,
+    username: null,
 };
 
 export function loginDetailsReducer(state: User = initUser, action: loginDetailsAction.Actions) {

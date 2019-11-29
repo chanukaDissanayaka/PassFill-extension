@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppState } from '../app.state';
+import { Store } from '@ngrx/store';
+import * as loginDetailsAction from '../store/loginDetails.action';
+import { User } from '../model/User.model';
 
 @Component({
   selector: 'app-dash-board',
@@ -12,7 +16,10 @@ export class DashBoardComponent implements OnInit {
   imageString1: any;
   fileData1: File = null;
   showImage1 = false;
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private store: Store<AppState>
+  ) { }
 
   ngOnInit() {
   }
@@ -46,8 +53,14 @@ export class DashBoardComponent implements OnInit {
     // });
   }
 
-  gotoLogin() {
-    this.router.navigateByUrl('login');
+  logout() {
+    const user: User = {
+      id: 0,
+      username: null
+    };
+    this.store.dispatch(new loginDetailsAction.SetUser(user));
+    chrome.storage.local.remove('user');
+    this.router.navigateByUrl('');
   }
 
 }
