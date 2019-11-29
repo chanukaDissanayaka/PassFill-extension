@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   private currentView$: Observable<currentView>;
   private loggedInUser$: Observable<User>;
   private showProgress: boolean;
+  private showSpinner: boolean;
 
   private loginForm = new FormGroup({
     email: new FormControl(''),
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit {
 
 
   submit() {
-
+    this.showSpinner = true;
     this.login(this.loginForm.value.email, this.loginForm.value.password);
   }
 
@@ -82,10 +83,12 @@ export class LoginComponent implements OnInit {
     };
 
     this.mainDataService.Login(loginReq).subscribe(response => {
+      this.showSpinner = false;
       console.log(response);
       this.onLoginResponse(response);
     },
       error => {
+        this.showSpinner = false;
         console.log(error);
         this.loginForm = new FormGroup({
           email: new FormControl(''),
