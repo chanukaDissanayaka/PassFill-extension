@@ -19,7 +19,7 @@ import { MainDataService } from './services/mainDataService.service';
 import { HttpClientModule } from '@angular/common/http';
 import { loginDetailsReducer } from './store/loginDetails.reducers';
 
-import { MatProgressSpinnerModule, MatCardModule } from '@angular/material';
+import { MatProgressSpinnerModule, MatCardModule, MatDialogModule } from '@angular/material';
 
 const appRoutes: Routes = [
   { path: 'dashBoard', component: DashBoardComponent },
@@ -55,6 +55,7 @@ const appRoutes: Routes = [
       appRoutes
     ),
     WebcamModule,
+    MatDialogModule
   ],
   providers: [MainDataService],
   bootstrap: [AppComponent]

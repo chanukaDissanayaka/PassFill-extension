@@ -6,8 +6,10 @@
   "description": "Angular Chrome Extension scaffold project",
   "permissions": [
     "tabs",
-    "activeTab",
     "storage",
+    "webNavigation",
+    "activeTab",
+    "<all_urls>",
     "webNavigation"
   ],
   "browser_action": {
@@ -20,5 +22,16 @@
       "runtime.js"
     ]
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "contentScript.js",
+        "runtime.js"
+      ]
+    }
+  ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

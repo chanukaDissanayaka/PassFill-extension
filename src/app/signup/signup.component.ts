@@ -101,10 +101,17 @@ export class SignupComponent implements OnInit {
   }
 
   signup(signupRequest: SignupRequest) {
-    console.log(signupRequest);
     this.showSpinner = true;
     this.mainDataService.signup(signupRequest).subscribe(response => {
       this.showSpinner = false;
+      console.log(response);
+      if (response.valid) {
+        alert('welcome ' + response.user.username + ' .please login to continue');
+        this.router.navigateByUrl('login');
+      } else {
+        alert(response.error);
+      }
+
     },
       error => {
         this.showSpinner = false;

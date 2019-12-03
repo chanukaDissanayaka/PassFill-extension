@@ -26,6 +26,9 @@
 //     }
 // });
 
+
+
+
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
     console.log(req);
     const data = { Key: 'name', Value: 1 };
@@ -34,10 +37,20 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
     sendResponse('hello');
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.webNavigation.onCompleted.addListener(() => {
-        chrome.tabs.query({ active: true, currentWindow: true }, ([{ id }]) => {
-            chrome.pageAction.show(id);
-        });
-    }, { url: [{ urlMatches: 'google.com' }] });
-});
+
+
+
+
+// chrome.tabs.onCreated.addListener((tab) => {
+//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//         // chrome.tabs.executeScript(tabs[0].id, {
+//         //     code: 'document.body.style.backgroundColor = "yellow";'
+//         // });
+//         tabs.forEach(tab => {
+//             alert(tab.url);
+//         });
+//     });
+// });
+
+
+
