@@ -4,14 +4,7 @@
   "short_name": "Angular Chrome Extension",
   "version": "1.0.0",
   "description": "Angular Chrome Extension scaffold project",
-  "permissions": [
-    "tabs",
-    "storage",
-    "webNavigation",
-    "activeTab",
-    "<all_urls>",
-    "webNavigation"
-  ],
+  
   "browser_action": {
     "default_popup": "index.html",
     "default_title": "Angular Chrome Extension"
@@ -30,8 +23,15 @@
       "js": [
         "contentScript.js",
         "runtime.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
+  ],
+  "permissions": [
+    "tabs",
+    "storage",
+    "activeTab",
+    "<all_urls>"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
