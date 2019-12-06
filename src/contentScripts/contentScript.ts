@@ -82,3 +82,13 @@ if (containsLogin) {
     fillForm('username', 'password');
 }
 
+async function isUserLogged() {
+    chrome.runtime.sendMessage({ action: 'loginCheck' }, (res) => {
+        return res;
+    });
+}
+
+isUserLogged().then((res) => {
+    const msg = 'user logged: ' + res;
+    alert(msg);
+})

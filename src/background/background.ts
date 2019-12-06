@@ -30,11 +30,19 @@
 
 
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-    console.log(req);
-    const data = { Key: 'name', Value: 1 };
-    const b = JSON.stringify(data);
-    chrome.storage.local.set({ Key: 'a', Value: 'b' }, () => { });
-    sendResponse('hello');
+
+    if (req.action === 'loginCheck') {
+        chrome.storage.local.get('user', (data) => {
+            if (data.user) {
+                sendResponse(true);
+            } else {
+                sendResponse(false);
+            }
+        });
+        return true;
+    }
+    return false;
+
 });
 
 

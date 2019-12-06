@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   checkBg() {
-    chrome.runtime.sendMessage({ name: 'test', message: 'hello' }, res => {
+    chrome.runtime.sendMessage({ action: 'userLogin', name: 'test', message: 'hello' }, res => {
       const loggedInUser: User = { id: 1, username: 'abc' };
       chrome.storage.local.set({ user: loggedInUser }, () => {
         chrome.storage.local.get('user', (data) => {
